@@ -5,12 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./fontawesome-pro/fontawesome.css">
     <title>Nityo Infotech</title>
 </head>
 <body>
     <div class="container">
         <div class="btn btn-success" data-bs-toggle="modal" data-bs-target="#productModal">
-            Add Product
+        <i class="far fa-plus-circle"> Add Product</i>
         </div>
 
         <div class="modal fade" id="productModal" tabindex="-1">
