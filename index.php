@@ -21,38 +21,38 @@
                     <h5 class="modal-title">Add Product</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form method="post" id="productForm" enctype="multipart/form-data">
+                <form method="post" id="productForm" enctype="multipart/form-data">
+                    <div class="modal-body">
                         <div class="row">
                             <div class="col-12">
                                 <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" required>
+                                <input type="text" class="form-control" name="name">
                             </div>
                             <div class="col-6">
                                 <label for="unit" class="form-label">Unit</label>
-                                <input type="text" class="form-control" id="unit" required>
+                                <input type="text" class="form-control" name="unit">
                             </div>
                             <div class="col-6">
                                 <label for="price" class="form-label">Price</label>
-                                <input type="number" class="form-control" id="price" placeholder="0.00" required>
+                                <input type="number" class="form-control" name="price" placeholder="0.00">
                             </div>
                             <div class="col-6">
                                 <label for="date" class="form-label">Expiration Date</label>
-                                <input type="date" class="form-control" id="date" required>
+                                <input type="date" class="form-control" name="date">
                             </div>
                             <div class="col-6">
                                 <label for="available" class="form-label">Available</label>
-                                <input type="text" class="form-control" id="available" required>
+                                <input type="text" class="form-control" name="available">
                             </div>
                             <div class="col-12">
                                 <label for="image" class="form-label">Image</label>
-                                <input type="file" class="form-control" id="image" required>
+                                <input type="file" class="form-control" name="image">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" name="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
                 </div>
@@ -63,33 +63,19 @@
     <script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(() => {
-            $('#productForm').on('submit', e => {
+        $(document).ready(function() {
+            $('#productForm').on('submit', function(e) {
                 // prevent to submit form
                 e.preventDefault();
 
-                $name = $('#name').val();
-                $unit = $('#unit').val();
-                $price = $('#price').val();
-                $date = $('#date').val();
-                $available = $('#available').val();
-                $image = $('#image').val();
-
-                formData = new FormData(this);
-
-            $.ajax({
-                type:'POST',
-                url:'product/add.php',
-                data: formData,
-                contentType: false,
-                processData: false,
-
-                sucess: message => {
-                    $('#productModal').modal('hide');
-                    alert(message);
-                }
-            });
-
+                $.ajax({
+                    type: 'POST',
+                    url: 'product/add.php',
+                    data: $('#productForm').serialize(),
+                    success: function(message){
+                        alert(message);
+                    }
+                })
             });
         });
     </script>
