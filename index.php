@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./fontawesome-pro/fontawesome.css">
+    <link rel="stylesheet" type="text/css" href="./bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./fontawesome-pro/fontawesome.css">
     <title>Nityo Infotech</title>
 </head>
 <body>
@@ -22,7 +22,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" id="productForm">
+                    <form method="post" id="productForm" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-12">
                                 <label for="name" class="form-label">Name</label>
@@ -59,19 +59,38 @@
             </div>
             </div>
     </div>
-    <script src="./js/jquery.js"></script>
-    <script src="./bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.js"></script>
+    <script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
 
-    <script>
+    <script type="text/javascript">
         $(document).ready(() => {
-            $('#productForm').on('submit', () => {
+            $('#productForm').on('submit', e => {
+                // prevent to submit form
+                e.preventDefault();
+
                 $name = $('#name').val();
                 $unit = $('#unit').val();
                 $price = $('#price').val();
                 $date = $('#date').val();
                 $available = $('#available').val();
                 $image = $('#image').val();
-            })
+
+                formData = new FormData(this);
+
+            $.ajax({
+                type:'POST',
+                url:'product/add.php',
+                data: formData,
+                contentType: false,
+                processData: false,
+
+                sucess: message => {
+                    $('#productModal').modal('hide');
+                    alert(message);
+                }
+            });
+
+            });
         });
     </script>
 </body>
