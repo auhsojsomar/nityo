@@ -68,7 +68,9 @@
                 $name = $('#name').val();
                 $unit = $('#unit').val();
                 $price = $('#price').val();
-
+                $date = $('#date').val();
+                $available = $('#available').val();
+                $image = $('#image').val();
             })
         });
     </script>
