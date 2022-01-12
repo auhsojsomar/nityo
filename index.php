@@ -34,7 +34,7 @@
                             </div>
                             <div class="col-6">
                                 <label for="price" class="form-label">Price</label>
-                                <input type="number" class="form-control" name="price" placeholder="0.00">
+                                <input type="number" step=".01" min="0" value="0.00" class="form-control" name="price" placeholder="0.00">
                             </div>
                             <div class="col-6">
                                 <label for="date" class="form-label">Expiration Date</label>
