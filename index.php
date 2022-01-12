@@ -59,6 +59,7 @@
             </div>
             </div>
     </div>
+    <script src="./js/sweetalert2.all.min.js"></script>
     <script type="text/javascript" src="./js/jquery.js"></script>
     <script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
 
@@ -68,12 +69,20 @@
                 // prevent to submit form
                 e.preventDefault();
 
+                let formData = new FormData(this);
                 $.ajax({
                     type: 'POST',
                     url: 'product/add.php',
-                    data: $('#productForm').serialize(),
+                    data: formData,
+                    contentType: false,
+                    processData:false,
+                    dataType:"json",
                     success: function(message){
-                        alert(message);
+                        Swal.fire({
+                        title: message.message,
+                        icon: message.msgType,
+                        confirmButtonText: 'Done'
+                        });
                     }
                 })
             });
