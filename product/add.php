@@ -2,6 +2,7 @@
 
 include "./Product.php";
 
-$product = new Product("Product Added");
+$product = new Product();
+echo json_encode($product->insertData());
 
 ?>

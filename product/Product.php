@@ -2,8 +2,6 @@
 
 class Product{
 
-    private $outputMessage;
-
     // Product Data
 
     private $name;
@@ -13,15 +11,11 @@ class Product{
     private $available;
     private $newFileName;
     
-    
-
-    public function __construct($outputMessage){
-        $this->outputMessage = $outputMessage;
-    }
-
     public function validateData(){
+        
+
         $output = array("msgType" => "", "message" => "");
-    
+        
         if($_SERVER["REQUEST_METHOD"] == "POST"){
             $this->name = $_POST["name"];
             $this->unit = $_POST["unit"];
@@ -63,7 +57,7 @@ class Product{
 
                     if(move_uploaded_file($_FILES["image"]["tmp_name"], $path)){
                         $this->newPrice = number_format((float) $price, 2, ".", "");
-                        $output = array("msgType" => "success", "message" => $this->outputMessage);
+                        $output = array("msgType" => "success");
                     }
                 }else{
                     $output = array("msgType" => "error", "message" => "Invalid image extension");
@@ -80,7 +74,7 @@ class Product{
     public function insertData(){
 
         require_once('../db.php');
-        
+
         $validate = $this->validateData();
 
         if($validate["msgType"] == "success"){
@@ -88,7 +82,7 @@ class Product{
                 $sql = "INSERT INTO products (name, unit, price, date, available, image) VALUES (?, ?, ?, ?, ?, ?)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([$this->name, $this->unit, $this->newPrice, $this->date, $this->available, $this->newFileName]);
-                return array("msgType" => $validate["msgType"], "message" => $validate["message"]);
+                return array("msgType" => $validate["msgType"], "message" => "Product Added");
             }
 
         }else{
@@ -96,6 +90,20 @@ class Product{
         }
         
     }
+
+    public function fetchData(){
+
+        require_once('../db.php');
+
+        $sql = "SELECT * FROM products";
+        $stmt = $pdo->query($sql);
+        $products = $stmt->fetchAll();
+
+        echo json_encode($products);
+
+
+    }
+
 }
 
 ?>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="./bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="./fontawesome-pro/fontawesome.css">
+    <link rel="stylesheet" type="text/css" href="./css/datatables.min.css">
     <title>Nityo Infotech</title>
 </head>
 <body>
@@ -58,10 +59,26 @@
                 </div>
             </div>
             </div>
+        <table id="productTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Unit</th>
+                    <th>Price</th>
+                    <th>Date</th>
+                    <th>Available</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+    
+            </tbody>
+        </table>
     </div>
     <script src="./js/sweetalert2.all.min.js"></script>
     <script type="text/javascript" src="./js/jquery.js"></script>
     <script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./js/datatables.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -85,11 +102,20 @@
                         });
 
                         if(message.msgType == "success"){
-                            $('#productModal').modal('hide');
+                            $("#productModal").modal("hide");
                             $("#productForm")[0].reset();
                         }
                     }
                 })
+            });
+
+            $("#productTable").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "serverMethod": 'post',
+                "ajax": {
+                    "url": "product/fetch.php"
+                }
             });
         });
     </script>
