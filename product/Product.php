@@ -1,77 +1,101 @@
 <?php
 
-include_once "../db.php";
+class Product{
 
-public class Product{
+    private $outputMessage;
 
-    public $outputMessage;
+    // Product Data
+
+    private $name;
+    private $unit;
+    private $newPrice;
+    private $date;
+    private $available;
+    private $newFileName;
+    
+    
 
     public function __construct($outputMessage){
         $this->outputMessage = $outputMessage;
     }
 
-    public function validateData($outputMessage){
-        $output = array("msgType" => "error", "message" => "");
+    public function validateData(){
+        $output = array("msgType" => "", "message" => "");
     
-        $name = $_POST["name"];
-        $unit = $_POST["unit"];
-        $price = $_POST["price"];
-        $date = $_POST["date"];
-        $available = $_POST["available"];
-        $fileName = $_FILES["image"]["name"];
+        if($_SERVER["REQUEST_METHOD"] == "POST"){
+            $this->name = $_POST["name"];
+            $this->unit = $_POST["unit"];
+            $price = $_POST["price"];
+            $this->date = $_POST["date"];
+            $this->available = $_POST["available"];
+            $fileName = $_FILES["image"]["name"];
 
-        if(empty($name) || !preg_match('/^\pL+$/u', $name)){
-            if(empty($name)){
-                $output = array("msgType" => "error", "message" => "Product Name is required");
-            }
-            else{
-                $output = array("msgType" => "error", "message" => "Product Name should contain letters only");
-                
-            }
-        }
-        else if(empty($unit) || !preg_match('/^\pL+$/u', $unit)){
-            if(empty($unit)){
-                $output = array("msgType" => "error", "message" => "Unit is required");
-            }
-            else{
-                $output = array("msgType" => "error", "message" => "Unit should contain letters only");
-            }
-        }else if(empty($price) || (float) $price < 1){
-            $output = array("msgType" => "error", "message" => "Price must be greater than 1");
-        }else if(empty($date)){
-            $output = array("msgType" => "error", "message" => "Expiration date is required");
-        }else if(empty($available) || (int) $available < 1){
-            $output = array("msgType" => "error", "message" => "Value must be greater than 1");
-        }else if(!empty($fileName)){
-            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-            $validExtension = array('jpg','jpeg','png','gif');
-
-            if(in_array(strtolower($extension), $validExtension)){
-                $newName = md5(rand()) . "." . $extension;
-                $path = "../images/". $newName;
-
-                if(move_uploaded_file($_FILES["image"]["tmp_name"], $path)){
-                    $newPrice = number_format((float) $price, 2, '.', '');
-                    $output = array("msgType" => "success", "message" => $this->outputMessage);
+            if(empty($this->name) || !preg_match("/^\pL+$/u", $this->name)){
+                if(empty($this->name)){
+                    $output = array("msgType" => "error", "message" => "Product Name is required");
                 }
-            }else{
-                $output = array("msgType" => "error", "message" => "Invalid image extension");
+                else{
+                    $output = array("msgType" => "error", "message" => "Product Name should contain letters only");
+                    
+                }
+            }
+            else if(empty($this->unit) || !preg_match("/^\pL+$/u", $this->unit)){
+                if(empty($this->unit)){
+                    $output = array("msgType" => "error", "message" => "Unit is required");
+                }
+                else{
+                    $output = array("msgType" => "error", "message" => "Unit should contain letters only");
+                }
+            }else if(empty($price) || (float) $price < 1){
+                $output = array("msgType" => "error", "message" => "Price must be greater than 1");
+            }else if(empty($this->date)){
+                $output = array("msgType" => "error", "message" => "Expiration date is required");
+            }else if(empty($this->available) || (int) $this->available < 1){
+                $output = array("msgType" => "error", "message" => "Value must be greater than 1");
+            }else if(!empty($fileName)){
+                $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+                $validExtension = array("jpg","jpeg","png","gif");
+
+                if(in_array(strtolower($extension), $validExtension)){
+
+                    $this->newFileName = md5(rand()) . "." . $extension;
+                    $path = "../images/". $this->newFileName;
+
+                    if(move_uploaded_file($_FILES["image"]["tmp_name"], $path)){
+                        $this->newPrice = number_format((float) $price, 2, ".", "");
+                        $output = array("msgType" => "success", "message" => $this->outputMessage);
+                    }
+                }else{
+                    $output = array("msgType" => "error", "message" => "Invalid image extension");
+                }
+            }
+            else{
+                $output = array("msgType" => "error", "message" => "Picture is required");
             }
         }
-        else{
-            $output = array("msgType" => "error", "message" => "Picture is required");
-        }
 
-        return json_encode($output);
+        return $output;
     }
 
-    // public function insertData(){
-    //     if($_SERVER["REQUEST_METHOD"] == "POST"){
-    //         if($output["msgType"] == "success"){
-    //             $sql = "INSERT INTO products (name, unit, price, date, available, image) VALUES (?, ?, ?, ?, ?, ?)";
-    //             $stmt = $conn->prepare($sql);
-    //             $stmt->execute([$name, $unit, $newPrice, $date, $available, $newName]);
-    //         }
-    //     }
-    // }
+    public function insertData(){
+
+        require_once('../db.php');
+        
+        $validate = $this->validateData();
+
+        if($validate["msgType"] == "success"){
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $sql = "INSERT INTO products (name, unit, price, date, available, image) VALUES (?, ?, ?, ?, ?, ?)";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([$this->name, $this->unit, $this->newPrice, $this->date, $this->available, $this->newFileName]);
+                return array("msgType" => $validate["msgType"], "message" => $validate["message"]);
+            }
+
+        }else{
+            return $validate;
+        }
+        
+    }
 }
+
+?>
