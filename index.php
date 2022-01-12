@@ -65,14 +65,14 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#productForm').on('submit', function(e) {
+            $("#productForm").on("submit", function(e) {
                 // prevent to submit form
                 e.preventDefault();
 
                 let formData = new FormData(this);
                 $.ajax({
-                    type: 'POST',
-                    url: 'product/add.php',
+                    type: "POST",
+                    url: "product/add.php",
                     data: formData,
                     contentType: false,
                     processData:false,
@@ -81,8 +81,13 @@
                         Swal.fire({
                         title: message.message,
                         icon: message.msgType,
-                        confirmButtonText: 'Done'
+                        confirmButtonText: "OK"
                         });
+
+                        if(message.msgType == "success"){
+                            $('#productModal').modal('hide');
+                            $("#productForm")[0].reset();
+                        }
                     }
                 })
             });

@@ -4,7 +4,7 @@ include "../db.php";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     
-    $output = "";
+    $output = array("msgType" => "error", "message" => "");
     
     $name = $_POST["name"];
     $unit = $_POST["unit"];
@@ -13,34 +13,29 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $available = $_POST["available"];
     $fileName = $_FILES["image"]["name"];
     
-    $newFileName = "";
-    $newPrice = "";
-
     if(empty($name) || !preg_match('/^\pL+$/u', $name)){
         if(empty($name)){
-            $output = "Product Name is required";
+            $output = array("msgType" => "error", "message" => "Product Name is required");
         }
         else{
-            $output = "Product Name should contain letters only";
+            $output = array("msgType" => "error", "message" => "Product Name should contain letters only");
+            
         }
     }
     else if(empty($unit) || !preg_match('/^\pL+$/u', $unit)){
         if(empty($unit)){
-            $output = "Unit is required";
+            $output = array("msgType" => "error", "message" => "Unit is required");
         }
         else{
-            $output = "Unit should contain letters only";
+            $output = array("msgType" => "error", "message" => "Unit should contain letters only");
         }
     }else if(empty($price) || (float) $price < 1){
-        $output = "Price must be greater than 1";
-        $newNumber = number_format((float) $price, 2, '.', '');
-        $newPrice = $newNumber;
+        $output = array("msgType" => "error", "message" => "Price must be greater than 1");
     }else if(empty($date)){
-        $output = "Expiration date is required";
+        $output = array("msgType" => "error", "message" => "Expiration date is required");
     }else if(empty($available) || (int) $available < 1){
-        $output = "Value must be greater than 1";
-    }
-    else if(!empty($fileName)){
+        $output = array("msgType" => "error", "message" => "Value must be greater than 1");
+    }else if(!empty($fileName)){
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $validExtension = array('jpg','jpeg','png','gif');
 
@@ -49,26 +44,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $path = "../images/". $newName;
 
             if(move_uploaded_file($_FILES["image"]["tmp_name"], $path)){
-                $newFileName = $newName;
+                $newPrice = number_format((float) $price, 2, '.', '');
+                $sql = "INSERT INTO products (name, unit, price, date, available, image) VALUES (?, ?, ?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([$name, $unit, $newPrice, $date, $available, $newName]);
+
+                $output = array("msgType" => "success", "message" => "Product Added");
             }
         }else{
-            $output = "Invalid image extension";
+            $output = array("msgType" => "error", "message" => "Invalid image extension");
         }
     }
     else{
-        $output = "Picture is required";
+        $output = array("msgType" => "error", "message" => "Picture is required");
     }
-
     
-    
-    
-    echo json_encode(array("msgType" => "error", "message" => $output));
-    
-
-    // $sql = "INSERT INTO products (name, unit, price, date, available, image) VALUES (?, ?, ?, ?, ?, ?)";
-    // $stmt = $conn->prepare($sql);
-    // $stmt->execute([$name, $unit, $price, $date, $available, $fileName]);
-
+    echo json_encode($output);
 }
 
 ?>
