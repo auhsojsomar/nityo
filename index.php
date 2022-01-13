@@ -58,8 +58,8 @@
                 </form>
                 </div>
             </div>
-            </div>
-        <table id="productTable">
+        </div>
+        <table id="productTable" class="w-100">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -68,10 +68,18 @@
                     <th>Date</th>
                     <th>Available</th>
                     <th>Image</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-    
+                <?php
+
+                include_once "./product/Product.php";
+
+                $product = new Product();
+                $product->fetchData();
+
+                ?>
             </tbody>
         </table>
     </div>
@@ -79,14 +87,19 @@
     <script type="text/javascript" src="./js/jquery.js"></script>
     <script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="./js/datatables.min.js"></script>
-
+    
     <script type="text/javascript">
+        
         $(document).ready(function() {
+
+            let dataTable = $("#productTable").DataTable({processing: true});
+            
             $("#productForm").on("submit", function(e) {
                 // prevent to submit form
                 e.preventDefault();
-
+                
                 let formData = new FormData(this);
+                
                 $.ajax({
                     type: "POST",
                     url: "product/add.php",
@@ -109,14 +122,43 @@
                 })
             });
 
-            $("#productTable").DataTable({
-                "processing": true,
-                "serverSide": true,
-                "serverMethod": 'post',
-                "ajax": {
-                    "url": "product/fetch.php"
+            $("[name=delete]").on('click', function(){
+                Swal.fire({
+                title: 'Are you sure you want to delete?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "product/delete.php",
+                        data: {id: this.id},
+                        success: message => {
+                            if(message == "error"){
+                                Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                                });
+                            }
+                            else{
+                                 Swal.fire(
+                                    'Deleted!',
+                                    'Your file has been deleted.',
+                                    'success'
+                                );
+                            }
+                            
+                        }
+                    });
                 }
+                });
             });
+
+
         });
     </script>
 </body>

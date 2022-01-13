@@ -93,17 +93,47 @@ class Product{
 
     public function fetchData(){
 
-        require_once('../db.php');
+        require_once "./db.php";
 
         $sql = "SELECT * FROM products";
-        $stmt = $pdo->query($sql);
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
         $products = $stmt->fetchAll();
 
-        echo json_encode($products);
-
+        foreach($products as $product){
+            echo "
+            <tr>
+                <td>$product->name</td>
+                <td>$product->unit</td>
+                <td>$product->price</td>
+                <td>$product->date</td>
+                <td>$product->available</td>
+                <td>$product->image</td>
+                <td>
+                    <button type='button' class='btn btn-warning btn-sm' name='update' id='$product->id'>Update</button>
+                    <button type='button' class='btn btn-danger btn-sm' name='delete' id='$product->id'>Delete</button>
+                </td>
+            </tr>
+            ";
+        }
 
     }
 
+    public function deleteData($id){
+
+    require_once "../db.php";
+
+    $sql = "DELETE FROM products WHERE id = ?";
+    $stmt = $pdo->prepare($sql);
+    $result = $stmt->execute([$id]);
+
+    if($result){
+        echo "success";
+    }
+    else{
+        echo "error";
+    }
+    }
 }
 
 ?>
