@@ -27,14 +27,14 @@ SET time_zone = "+00:00";
 -- Table structure for table `product`
 --
 
-CREATE TABLE `product` (
+CREATE TABLE `products` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `unit` varchar(255) NOT NULL,
-  `price` decimal(10,0) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
   `date` date NOT NULL,
   `available` int(10) NOT NULL,
-  `image` text NOT NULL
+  `image` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `product` (
 --
 -- Indexes for table `product`
 --
-ALTER TABLE `product`
+ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -54,7 +54,7 @@ ALTER TABLE `product`
 --
 -- AUTO_INCREMENT for table `product`
 --
-ALTER TABLE `product`
+ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
