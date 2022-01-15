@@ -45,7 +45,7 @@ class Product{
             }else if(empty($this->date)){
                 $output = array("msgType" => "error", "message" => "Expiration date is required");
             }else if(empty($this->available) || (int) $this->available < 1){
-                $output = array("msgType" => "error", "message" => "Value must be greater than 1");
+                $output = array("msgType" => "error", "message" => "Available stock must be greater than 1");
             }else if(!empty($fileName)){
                 $extension = pathinfo($fileName, PATHINFO_EXTENSION);
                 $validExtension = array("jpg","jpeg","png","gif");
@@ -73,7 +73,7 @@ class Product{
 
     public function insertData(){
 
-        require_once('../db.php');
+        require_once "../db.php";
 
         $validate = $this->validateData();
 
@@ -93,7 +93,9 @@ class Product{
 
     public function fetchData(){
 
-        require_once "./db.php";
+        require_once "../db.php";
+
+        $result = array();
 
         $sql = "SELECT * FROM products";
         $stmt = $pdo->prepare($sql);
@@ -101,38 +103,35 @@ class Product{
         $products = $stmt->fetchAll();
 
         foreach($products as $product){
-            echo "
-            <tr>
-                <td>$product->name</td>
-                <td>$product->unit</td>
-                <td>$product->price</td>
-                <td>$product->date</td>
-                <td>$product->available</td>
-                <td>$product->image</td>
-                <td>
-                    <button type='button' class='btn btn-warning btn-sm' name='update' id='$product->id'>Update</button>
-                    <button type='button' class='btn btn-danger btn-sm' name='delete' id='$product->id'>Delete</button>
-                </td>
-            </tr>
-            ";
+            $result['data'][] = array(
+                $product->name,
+                $product->unit,
+                $product->price,
+                $product->date,
+                $product->available,
+                $product->image,
+                '<button type="button" class="btn btn-danger btn-sm" name="delete" id="'.$product->id.'">Delete</button>'
+            );
         }
+
+        return $result;
 
     }
 
     public function deleteData($id){
 
-    require_once "../db.php";
+        require_once "../db.php";
 
-    $sql = "DELETE FROM products WHERE id = ?";
-    $stmt = $pdo->prepare($sql);
-    $result = $stmt->execute([$id]);
+        $sql = "DELETE FROM products WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $result = $stmt->execute([$id]);
 
-    if($result){
-        echo "success";
-    }
-    else{
-        echo "error";
-    }
+        if($result){
+            echo "success";
+        }
+        else{
+            echo "error";
+        }
     }
 }
 

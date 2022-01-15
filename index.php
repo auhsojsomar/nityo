@@ -72,14 +72,6 @@
                 </tr>
             </thead>
             <tbody>
-                <?php
-
-                include_once "./product/Product.php";
-
-                $product = new Product();
-                $product->fetchData();
-
-                ?>
             </tbody>
         </table>
     </div>
@@ -92,7 +84,13 @@
         
         $(document).ready(function() {
 
-            let dataTable = $("#productTable").DataTable({processing: true});
+            let productTable = $("#productTable").DataTable({
+                "ajax": {
+                    url: "product/fetch.php",
+                    type: "POST",
+                    dataType: "json"
+                }
+            });
             
             $("#productForm").on("submit", function(e) {
                 // prevent to submit form
@@ -117,12 +115,13 @@
                         if(message.msgType == "success"){
                             $("#productModal").modal("hide");
                             $("#productForm")[0].reset();
+                            productTable.ajax.reload();
                         }
                     }
-                })
+                });
             });
 
-            $("[name=delete]").on('click', function(){
+            $(document).on('click','[name="delete"]', function(){
                 Swal.fire({
                 title: 'Are you sure you want to delete?',
                 icon: 'warning',
@@ -150,6 +149,7 @@
                                     'Your file has been deleted.',
                                     'success'
                                 );
+                                productTable.ajax.reload();
                             }
                             
                         }
