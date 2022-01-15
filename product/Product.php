@@ -109,8 +109,9 @@ class Product{
                 $product->price,
                 $product->date,
                 $product->available,
-                $product->image,
-                '<button type="button" class="btn btn-danger btn-sm" name="delete" id="'.$product->id.'">Delete</button>'
+                '<img class="img-thumbnail" src="./images/'.$product->image.'" alt="'.$product->image.' ">',
+                '<button type="button" class="btn btn-warning btn-sm" name="update" id="'.$product->id.'">Update</button>
+                <button type="button" class="btn btn-danger btn-sm" name="delete" id="'.$product->id.'">Delete</button>'
             );
         }
 
@@ -126,12 +127,33 @@ class Product{
         $stmt = $pdo->prepare($sql);
         $result = $stmt->execute([$id]);
 
+        $stmt2 = $pdo->prepare("SELECT image FROM products WHERE id = ?");
+        $stmt2->execute([$id]);
+        $image = $stmt2->fetchAll();
+
+        $path = "./images/".$image."";
+
         if($result){
-            echo "success";
+            var_dump($image);
         }
         else{
             echo "error";
         }
+    }
+
+    public function updateData($id){
+
+        require_once "../db.php";
+
+
+        $sql = "SELECT * FROM products WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$id]);
+        $product = $stmt->fetch();
+
+
+        return $product;
+
     }
 }
 

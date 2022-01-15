@@ -62,13 +62,13 @@
         <table id="productTable" class="w-100">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Unit</th>
-                    <th>Price</th>
-                    <th>Date</th>
-                    <th>Available</th>
-                    <th>Image</th>
-                    <th>Action</th>
+                    <th class="col">Name</th>
+                    <th class="col">Unit</th>
+                    <th class="col">Price</th>
+                    <th class="col">Date</th>
+                    <th class="col">Available</th>
+                    <th class="col-2">Image</th>
+                    <th class="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -85,7 +85,8 @@
         $(document).ready(function() {
 
             let productTable = $("#productTable").DataTable({
-                "ajax": {
+                processing: true,
+                ajax: {
                     url: "product/fetch.php",
                     type: "POST",
                     dataType: "json"
@@ -145,7 +146,7 @@
                             }
                             else{
                                  Swal.fire(
-                                    'Deleted!',
+                                    message,
                                     'Your file has been deleted.',
                                     'success'
                                 );
@@ -156,8 +157,23 @@
                     });
                 }
                 });
+
+                
             });
 
+            $(document).on('click','[name="update"]', function(){
+                $.ajax({
+                    url: "product/update.php",
+                    type: "POST",
+                    dataType: "json",
+                    data: {id: this.id},
+                    success: function(message){
+                        // $("[name='name'").val(message.name);
+
+                        console.log(message);
+                    }
+                });
+            });
 
         });
     </script>
