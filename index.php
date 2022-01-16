@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="container">
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#productModal">Add Product</button>
+        <button id="addButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#productModal">Add Product</button>
 
         <div class="modal fade" id="productModal" tabindex="-1">
             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -81,6 +81,9 @@
         
         $(document).ready(function() {
 
+            let methodType = "";
+            let productID = "";
+
             let productTable = $("#productTable").DataTable({
                 processing: true,
                 ajax: {
@@ -95,10 +98,11 @@
                 e.preventDefault();
                 
                 let formData = new FormData(this);
+                formData.append("id", productID);
                 
                 $.ajax({
                     type: "POST",
-                    url: "product/add.php",
+                    url: `product/${methodType}.php`,
                     data: formData,
                     contentType: false,
                     processData:false,
@@ -159,6 +163,9 @@
             });
 
             $(document).on('click','button[name="update"]', function(){
+
+                productID = this.id;
+
                 $.ajax({
                     url: "product/fetchSingle.php",
                     type: "POST",
@@ -171,8 +178,14 @@
                         $('[name="date"]').val(data.date);
                         $('[name="available"]').val(data.available);
                         $('#productModal').modal('show');
+                        methodType = "update";
                     }
                 });
+            });
+
+            $(document).on('click', '#addButton', function(){
+                methodType = "add";
+                productID = "";
             });
 
         });
