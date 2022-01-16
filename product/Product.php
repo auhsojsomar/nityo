@@ -146,7 +146,8 @@ class Product{
                 $product->price,
                 $product->date,
                 $product->available,
-                '<img class="img-thumbnail" src="./images/'.$product->image.'" alt="'.$product->image.' ">',
+                number_format($product->available * $product->price, 2), 
+                '<img class="img-thumbnail" style="max-height: 100px;" src="./images/'.$product->image.'" alt="'.$product->image.' ">',
                 '<button type="button" class="btn btn-warning btn-sm" name="update" id="'.$product->id.'">Update</button>
                 <button type="button" class="btn btn-danger btn-sm" name="delete" id="'.$product->id.'">Delete</button>'
             );

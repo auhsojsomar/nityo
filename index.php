@@ -10,8 +10,7 @@
 </head>
 <body>
     <div class="container">
-        <button id="addButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#productModal">Add Product</button>
-
+        <button id="addButton" class="btn btn-success mt-sm-5 mt-3" data-bs-toggle="modal" data-bs-target="#productModal">Add Product</button>
         <div class="modal fade" id="productModal" tabindex="-1">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
@@ -56,21 +55,24 @@
                 </div>
             </div>
         </div>
-        <table id="productTable" class="w-100">
-            <thead>
-                <tr>
-                    <th class="col">Name</th>
-                    <th class="col">Unit</th>
-                    <th class="col">Price</th>
-                    <th class="col">Date</th>
-                    <th class="col">Available</th>
-                    <th class="col-2">Image</th>
-                    <th class="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <div class="mt-md-5 mt-3">
+            <table id="productTable" class="w-100">
+                <thead>
+                    <tr>
+                        <th class="col">Name</th>
+                        <th class="col">Unit</th>
+                        <th class="col">Price</th>
+                        <th class="col">Date</th>
+                        <th class="col">Available</th>
+                        <th class="col">Available Cost</th>
+                        <th class="col-2">Image</th>
+                        <th class="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
     <script src="./js/sweetalert2.all.min.js"></script>
     <script type="text/javascript" src="./js/jquery.js"></script>
