@@ -5,15 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="./bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="./fontawesome-pro/fontawesome.css">
     <link rel="stylesheet" type="text/css" href="./css/datatables.min.css">
     <title>Nityo Infotech</title>
 </head>
 <body>
     <div class="container">
-        <div class="btn btn-success" data-bs-toggle="modal" data-bs-target="#productModal">
-        <i class="far fa-plus-circle"> Add Product</i>
-        </div>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#productModal">Add Product</button>
 
         <div class="modal fade" id="productModal" tabindex="-1">
             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -146,7 +143,7 @@
                             }
                             else{
                                  Swal.fire(
-                                    message,
+                                    'Deleted!',
                                     'Your file has been deleted.',
                                     'success'
                                 );
@@ -163,14 +160,17 @@
 
             $(document).on('click','button[name="update"]', function(){
                 $.ajax({
-                    url: "product/update.php",
+                    url: "product/fetchSingle.php",
                     type: "POST",
                     dataType: "json",
                     data: {id: this.id},
-                    success: function(message){
-                        // $("[name='name'").val(message.name);
-
-                        console.log(message);
+                    success: function(data){
+                        $('[name="name"]').val(data.name);
+                        $('[name="unit"]').val(data.unit);
+                        $('[name="price"]').val(data.price);
+                        $('[name="date"]').val(data.date);
+                        $('[name="available"]').val(data.available);
+                        $('#productModal').modal('show');
                     }
                 });
             });

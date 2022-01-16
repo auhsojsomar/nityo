@@ -159,7 +159,7 @@ class Product{
         }
     }
 
-    public function updateData($id){
+    public function fetchSingle($id){
 
         require_once "../db.php";
 
