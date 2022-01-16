@@ -93,7 +93,7 @@
                 }
             });
             
-            $("#productForm").on("submit", function(e) {
+            $(document).on("submit","form#productForm", function(e) {
                 // prevent to submit form
                 e.preventDefault();
                 
@@ -122,7 +122,7 @@
                 });
             });
 
-            $(document).on('click','[name="delete"]', function(){
+            $(document).on('click','button[name="delete"]', function(){
                 Swal.fire({
                 title: 'Are you sure you want to delete?',
                 icon: 'warning',
@@ -161,7 +161,7 @@
                 
             });
 
-            $(document).on('click','[name="update"]', function(){
+            $(document).on('click','button[name="update"]', function(){
                 $.ajax({
                     url: "product/update.php",
                     type: "POST",

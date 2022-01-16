@@ -40,13 +40,17 @@ class Product{
                 else{
                     $output = array("msgType" => "error", "message" => "Unit should contain letters only");
                 }
-            }else if(empty($price) || (float) $price < 1){
+            }
+            else if(empty($price) || (float) $price < 1){
                 $output = array("msgType" => "error", "message" => "Price must be greater than 1");
-            }else if(empty($this->date)){
+            }
+            else if(empty($this->date)){
                 $output = array("msgType" => "error", "message" => "Expiration date is required");
-            }else if(empty($this->available) || (int) $this->available < 1){
+            }
+            else if(empty($this->available) || (int) $this->available < 1){
                 $output = array("msgType" => "error", "message" => "Available stock must be greater than 1");
-            }else if(!empty($fileName)){
+            }
+            else if(!empty($fileName)){
                 $extension = pathinfo($fileName, PATHINFO_EXTENSION);
                 $validExtension = array("jpg","jpeg","png","gif");
 
@@ -59,7 +63,8 @@ class Product{
                         $this->newPrice = number_format((float) $price, 2, ".", "");
                         $output = array("msgType" => "success");
                     }
-                }else{
+                }
+                else{
                     $output = array("msgType" => "error", "message" => "Invalid image extension");
                 }
             }
@@ -84,11 +89,10 @@ class Product{
                 $stmt->execute([$this->name, $this->unit, $this->newPrice, $this->date, $this->available, $this->newFileName]);
                 return array("msgType" => $validate["msgType"], "message" => "Product Added");
             }
-
-        }else{
+        }
+        else{
             return $validate;
         }
-        
     }
 
     public function fetchData(){
@@ -103,6 +107,12 @@ class Product{
         $products = $stmt->fetchAll();
 
         foreach($products as $product){
+            // DataTables sturcture
+
+            // data:[
+            //     {id: "1", name: "Test1"},
+            //     {id: "2", name: "Test2"},
+            // ]
             $result['data'][] = array(
                 $product->name,
                 $product->unit,
@@ -115,26 +125,34 @@ class Product{
             );
         }
 
-        return $result;
-
+        if(empty($result)){
+            return array("data" => "");
+        }
+        else{
+            return $result;
+        }
     }
 
     public function deleteData($id){
 
         require_once "../db.php";
 
-        $sql = "DELETE FROM products WHERE id = ?";
+        $sql = "SELECT image FROM products WHERE id = ?";
         $stmt = $pdo->prepare($sql);
-        $result = $stmt->execute([$id]);
+        $stmt->execute([$id]);
+        $product = $stmt->fetch();
+        $path = "../images/$product->image";
 
-        $stmt2 = $pdo->prepare("SELECT image FROM products WHERE id = ?");
-        $stmt2->execute([$id]);
-        $image = $stmt2->fetchAll();
-
-        $path = "./images/".$image."";
+        $sql2 = "DELETE FROM products WHERE id = ?";
+        $stmt2 = $pdo->prepare($sql2);
+        $result = $stmt2->execute([$id]);
 
         if($result){
-            var_dump($image);
+            if(file_exists($path)){
+                if(unlink($path)){
+                    echo "success";
+                }
+            }
         }
         else{
             echo "error";
@@ -145,15 +163,12 @@ class Product{
 
         require_once "../db.php";
 
-
         $sql = "SELECT * FROM products WHERE id = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$id]);
         $product = $stmt->fetch();
 
-
         return $product;
-
     }
 }
 
