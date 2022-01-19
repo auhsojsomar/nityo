@@ -87,6 +87,7 @@ $(document).ready(function () {
         $('[name="date"]').val(data.date);
         $('[name="available"]').val(data.available);
         $("#productModal").modal("show");
+        $(".modal-title").html("Edit Product");
         methodType = "update";
       },
     });
@@ -96,5 +97,6 @@ $(document).ready(function () {
     methodType = "add";
     productID = "";
     $("#productForm")[0].reset();
+    $(".modal-title").html("Add Product");
   });
 });
