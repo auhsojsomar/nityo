@@ -25,21 +25,21 @@ class Product{
             $fileName = $_FILES["image"]["name"];
             $id = $_POST["id"];
 
-            if(empty($this->name) || !preg_match("/^\pL+$/u", $this->name)){
+            if(empty($this->name) || !preg_match("#^[a-zA-Z0-9]+$#", $this->name)){
                 if(empty($this->name)){
                     $output = array("msgType" => "error", "message" => "Product Name is required");
                 }
                 else{
-                    $output = array("msgType" => "error", "message" => "Product Name should contain letters only");
+                    $output = array("msgType" => "error", "message" => "Product Name should contain letters and numbers only");
                     
                 }
             }
-            else if(empty($this->unit) || !preg_match("/^\pL+$/u", $this->unit)){
+            else if(empty($this->unit) || !preg_match("#^[a-zA-Z0-9]+$#", $this->unit)){
                 if(empty($this->unit)){
                     $output = array("msgType" => "error", "message" => "Unit is required");
                 }
                 else{
-                    $output = array("msgType" => "error", "message" => "Unit should contain letters only");
+                    $output = array("msgType" => "error", "message" => "Unit should contain letters and numbers only");
                 }
             }
             else if(empty($price) || (float) $price < 1){
@@ -144,7 +144,7 @@ class Product{
                 $product->name,
                 $product->unit,
                 $product->price,
-                $product->date,
+                date_format(date_create($product->date), "F d, Y"),
                 $product->available,
                 number_format($product->available * $product->price, 2), 
                 '<img class="img-thumbnail" style="max-height: 100px;" src="./images/'.$product->image.'" alt="'.$product->image.' ">',
